@@ -11,14 +11,14 @@ helptext = '''
 
 -std: stdin
 press Q: quit xy find
-press G: NG
+press U: UNDO
 
 
 #cat m.jpg | tesseract -l jpn_best stdin stdout
-#cat m.jpg | tesseract -l jpn_best stdin stdout
+
 #cat test.png | convert - -crop 50x50+20+20 - |  tesseract -l jpn_best stdin stdout
 
-convert logo: png:- |./xyimg-20200215.py >pipe_point
+
 convert ll.pdf[0] png:- |./xyimg-20200215.py - --point > pipe_points
 
 
@@ -89,7 +89,6 @@ def draw_square(event,x,y,flags,param):
         cv2.imshow("img", img)
         square.append([[ix,iy],[x,y]])
 
-        # if("--realtime" in sys.argv):
         print('{width}x{height}+{px}+{py}'.format(
             px = ix if ix<=x else x,
             py = iy if iy<=y else y,
@@ -127,26 +126,83 @@ for i in sys.argv:
 
 
 
-if ("-stdin" in sys.argv):
-# if sys.argv[1]=="-":
-    # stdin = sys.stdin.read()
-    stdin = sys.stdin.buffer.read()
+# if ("-stdin" in sys.argv):
+# # if sys.argv[1]=="-":
+#     stdin = sys.stdin.read()
+#     # stdin = sys.stdin.buffer.read()
+#     array = numpy.frombuffer(stdin, dtype='uint8')
+#     img = cv2.imdecode(array, 1)
+# elif(filename!=""):
+#     img = cv2.imread(filename, 1)
+# else:
+#     print("no input data")
+#     exit;
+
+
+
+
+import argparse
+
+parser = argparse.ArgumentParser(description="joooooooooooooooooooooin",usage=helptext)
+parser.add_argument('filename', nargs='?')
+
+parser.add_argument('--name',help="name of your input")
+
+args = parser.parse_args()
+
+if args.filename is None:
+    # process(sys.stdin)
+    stdin = sys.stdin.read()
+    # stdin = sys.stdin.buffer.read()
     array = numpy.frombuffer(stdin, dtype='uint8')
     img = cv2.imdecode(array, 1)
-elif(filename!=""):
-    img = cv2.imread(filename, 1)
+
 else:
-    print("no input data")
-    exit;
+    # with open(args.filename) as f:
+        # process(f)
+    img = cv2.imread(args.filename, 1)
+    name = args.filename;
+
+
+
+if args.name is None:
+    None
+else:
+    name = args.name
+    print(name)
+
+
+
+
+# def main():
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument('filename', nargs='?')
+#     args = parser.parse_args()
+
+#     if args.filename is None:
+#         process(sys.stdin)
+#     else:
+#         with open(args.filename) as f:
+#             process(f)
+
+# if __name__ == "__main__":
+#     main()
 
 
 
 
 
-if(filename!=""):
-    print("============="+filename+"=============") 
+
+
+
+
+
+
+
+if(name!=""):
+    print("============="+name+"=============") 
 elif(stdinname):
-    print("============= STDIN ==="+stdinname+"============") 
+    print("============= STDIN ==="+name+"============") 
 
 
 
@@ -160,15 +216,8 @@ elif(stdinname):
 cv2.namedWindow("img", cv2.WINDOW_NORMAL)
 
 
-
-# try:
-#     if sys.argv[2]=="--point":
-#         cv2.setMouseCallback("img", mouse_event)
-# except:
-
 cv2.setMouseCallback("img", draw_square)
     
-
 
 cv2.imshow("img", img)
 
@@ -181,8 +230,8 @@ while (True):
     if cv2.waitKey(115) & 0xFF == ord("q"):
         break
     if cv2.waitKey(115) & 0xFF == ord("u"):
-        print("---- NG -"+filename+"=----")
-        print("============="+filename+"=============")
+        print("---- NG -"+name+"=----")
+        print("============="+name+"=============")
         img = cv2.imdecode(array, 1)
         cv2.imshow("img", img)
 
@@ -190,27 +239,8 @@ while (True):
 
 
 
-# try:
-#     if sys.argv[2]=="--point":
-#         print(xy)
 
-
-# except:
-
-#     for sq in square:
-#         print('{width}x{height}+{px}+{py}'.format(
-#             px = sq[0][0] if sq[0][0]<=sq[1][0] else sq[1][0],
-#             py = sq[0][1] if sq[0][1]<=sq[1][1] else sq[1][1],
-#             width = abs(sq[0][0]-sq[1][0]), height=abs(sq[0][1]-sq[1][1])
-#             ))
-
-
-
-# if ("-points" in sys.argv):
-#     print(xy)
-
-
-print("---- END -"+filename+"=----")
+print("---- END -"+name+"=----")
 
 print(points)
 print(xy)
@@ -220,10 +250,10 @@ print("---")
 
 
 for sq in square:
-    # print filename
-        # filename = filename+' - ' if (filename in locals()) else "",
-    # if(filename in locals()):
-    print (filename)
+    # print name
+        # name = name+' - ' if (name in locals()) else "",
+    # if(name in locals()):
+    print (name)
 
     print('{width}x{height}+{px}+{py}'.format(
         px = sq[0][0] if sq[0][0]<=sq[1][0] else sq[1][0],
@@ -234,22 +264,3 @@ for sq in square:
 
 print("----================----")
 
-
-# def mouse_event(event, x, y, flags, param):
-
-#     global xy
-#     global square
-#     global points
-
-#     if event == cv2.EVENT_LBUTTONUP:
-#         cv2.circle(img, (x, y), 3, (0, 0, 255), -1)
-#         xy+=str(x)
-#         xy+=" "
-#         xy+=str(y)
-#         xy+=" "
-#         square.append([x,y])
-#         print(str(x)+' '+str(y))
-#         # sys.stdout(str(x)+' '+str(y))
-#         sys.stdout.flush()
-
-#         
