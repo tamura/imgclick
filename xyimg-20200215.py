@@ -106,18 +106,21 @@ xy=""
 square=[]
 points=[]
 
+
+
+name=""
 filename=""
 stdinname=""
 
 
-if ("-h" in sys.argv):
-	print(helptext)
-	exit()
+# if ("-h" in sys.argv):
+# 	print(helptext)
+# 	exit()
 
 
-for i in sys.argv:
-    if(re.compile("-file=.*.[png,jpg]").match(str(i))):
-        filename = i.split("=")[1]
+# for i in sys.argv:
+#     if(re.compile("-file=.*.[png,jpg]").match(str(i))):
+#         filename = i.split("=")[1]
 
 
 for i in sys.argv:
@@ -143,7 +146,8 @@ for i in sys.argv:
 
 import argparse
 
-parser = argparse.ArgumentParser(description="joooooooooooooooooooooin",usage=helptext)
+parser = argparse.ArgumentParser(description="joooooin",usage=helptext)
+
 parser.add_argument('filename', nargs='?')
 
 parser.add_argument('--name',help="name of your input")
@@ -187,10 +191,6 @@ else:
 
 # if __name__ == "__main__":
 #     main()
-
-
-
-
 
 
 
