@@ -113,49 +113,52 @@ filename=""
 stdinname=""
 
 
-# if ("-h" in sys.argv):
-# 	print(helptext)
-# 	exit()
-
-
-# for i in sys.argv:
-#     if(re.compile("-file=.*.[png,jpg]").match(str(i))):
-#         filename = i.split("=")[1]
-
-
-for i in sys.argv:
-    if(re.compile("-stdinname=.*").match(str(i))):
-        stdinname = i.split("=")[1]
-
-
-
-# if ("-stdin" in sys.argv):
-# # if sys.argv[1]=="-":
-#     stdin = sys.stdin.read()
-#     # stdin = sys.stdin.buffer.read()
-#     array = numpy.frombuffer(stdin, dtype='uint8')
-#     img = cv2.imdecode(array, 1)
-# elif(filename!=""):
-#     img = cv2.imread(filename, 1)
-# else:
-#     print("no input data")
-#     exit;
-
 
 
 
 import argparse
 
-parser = argparse.ArgumentParser(description="joooooin",usage=helptext)
+
+
+
+
+
+
+# def main():
+#     parser = argparse.ArgumentParser()
+
+
+# if __name__ == "__main__":
+#     main()
+
+
+
+
+
+
+parser = argparse.ArgumentParser(description="draw squares or points on the image with mouse, to get its coordinate X and Y posioton and width, height and so on",usage=helptext)
 
 parser.add_argument('filename', nargs='?')
 
-parser.add_argument('--name',help="name of your input")
+parser.add_argument('--name',help="Specify name of the group you make, if you like.")
+
+
+parser.add_argument('--only-result',help="じょじょにprintしないでいい")
+
+
+# parser.add_argument('--whxy',help="format: imagemagick coordinates (width)x(height)+X+Y")
+
+# parser.add_argument('--format',help="{w} {h} {x1} {y1} {x2} {x2}")
+
+# parser.add_argument('--resize',help="return resized numbers ")
+
+
+
+
 
 args = parser.parse_args()
 
 if args.filename is None:
-    # process(sys.stdin)
     stdin = sys.stdin.read()
     # stdin = sys.stdin.buffer.read()
     array = numpy.frombuffer(stdin, dtype='uint8')
@@ -163,10 +166,9 @@ if args.filename is None:
 
 else:
     # with open(args.filename) as f:
-        # process(f)
+    # process(f)
     img = cv2.imread(args.filename, 1)
     name = args.filename;
-
 
 
 if args.name is None:
@@ -178,27 +180,6 @@ else:
 
 
 
-# def main():
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument('filename', nargs='?')
-#     args = parser.parse_args()
-
-#     if args.filename is None:
-#         process(sys.stdin)
-#     else:
-#         with open(args.filename) as f:
-#             process(f)
-
-# if __name__ == "__main__":
-#     main()
-
-
-
-
-
-
-
-
 if(name!=""):
     print("============="+name+"=============") 
 elif(stdinname):
@@ -206,21 +187,12 @@ elif(stdinname):
 
 
 
-# if("img" not in locals()):
-#     print i.split("=")[1]
-#     img = cv2.imread(i.split("=")[1], 1)
-
-
-
 
 cv2.namedWindow("img", cv2.WINDOW_NORMAL)
 
-
 cv2.setMouseCallback("img", draw_square)
-    
 
 cv2.imshow("img", img)
-
 
 
 
