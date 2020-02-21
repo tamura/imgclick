@@ -6,6 +6,9 @@ import cv2
 import numpy
 import re
 
+# sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
+# sys.stderr = os.fdopen(sys.stderr.fileno(), 'w', buffering=1)
+# sys.stdin = os.fdopen(sys.stdin.fileno(), 'r', buffering=1)
 
 helptext = '''
 
@@ -123,7 +126,6 @@ import argparse
 
 
 
-
 # def main():
 #     parser = argparse.ArgumentParser()
 
@@ -159,9 +161,14 @@ parser.add_argument('--only-result',help="じょじょにprintしないでいい
 args = parser.parse_args()
 
 if args.filename is None:
-    stdin = sys.stdin.read()
-    # stdin = sys.stdin.buffer.read()
+    try:
+        unicode # python2
+        stdin = sys.stdin.read()
+    except:
+        stdin = sys.stdin.buffer.read()
+
     array = numpy.frombuffer(stdin, dtype='uint8')
+    # array = numpy.frombuffer(stdin, dtype='uint8')
     img = cv2.imdecode(array, 1)
 
 else:
