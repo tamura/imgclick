@@ -11,7 +11,7 @@ import re
 # sys.stdin = os.fdopen(sys.stdin.fileno(), 'r', buffering=1)
 
 
-# filename....?
+# filename....?-
 # import os
 # print(os.readlink('/proc/self/fd/0'))
 
@@ -153,7 +153,7 @@ parser = argparse.ArgumentParser(description="draw squares or points on the imag
 
 parser.add_argument('filename', nargs='?')
 
-parser.add_argument('--name',help="Specify name of the group you make, if you like.")
+parser.add_argument('--name',help="Specify name of the outputs.")
 
 
 parser.add_argument('--only-result',help="じょじょにprintしないでいい")
