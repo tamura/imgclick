@@ -61,41 +61,42 @@ ls xx-0*.png |xargs -I {} sh -c '../xyimg-20200215.py -file={}'
 
 
 
-def draw_square(event,x,y,flags,param):
+def draw_square(event,px,py,flags,param):
     global ix,iy,drawing,mode
     global square
     global xy
+    global outputformat
     # global img
 
     if event == cv2.EVENT_LBUTTONDOWN:
         drawing = True
-        ix,iy = x,y
+        ix,iy = px,py
 
     elif event == cv2.EVENT_MOUSEMOVE:
         if drawing == True:
-            cv2.rectangle(img,(ix,iy),(x,y),(0,255,0),1)
+            cv2.rectangle(img,(ix,iy),(px,py),(0,255,0),1)
             cv2.imshow("img", img)
 
 
     elif event == cv2.EVENT_LBUTTONUP:
-        if (ix==x and iy==y):
-            points.append([x,y])
-            xy+=str(x)
+        if (ix==px and iy==py):
+            points.append([px,py])
+            xy+=str(px)
             xy+=" "
-            xy+=str(y)
+            xy+=str(py)
             xy+=" "
-            cv2.circle(img, (x, y), 3, (0, 0, 255), -1)
+            cv2.circle(img, (px, py), 3, (0, 0, 255), -1)
 
 
         drawing = False
-        cv2.rectangle(img,(ix,iy),(x,y),(255,0,0),1)
+        cv2.rectangle(img,(ix,iy),(px,py),(255,0,0),1)
         cv2.imshow("img", img)
-        square.append([[ix,iy],[x,y]])
+        square.append([[ix,iy],[px,py]])
 
-        print('{width}x{height}+{px}+{py}'.format(
-            px = ix if ix<=x else x,
-            py = iy if iy<=y else y,
-            width = abs(ix-x), height=abs(iy-y)
+        print(outputformat.format(
+            x = ix if ix<=px else px,
+            y = iy if iy<=py else py,
+            w = abs(ix-px), h=abs(iy-py)
             ))
         sys.stdout.flush()
 
@@ -148,9 +149,9 @@ parser.add_argument('--name',help="Specify name of the group you make, if you li
 parser.add_argument('--only-result',help="じょじょにprintしないでいい")
 
 
-# parser.add_argument('--whxy',help="format: imagemagick coordinates (width)x(height)+X+Y")
+parser.add_argument('--whxy',help="format: imagemagick coordinates (width)x(height)+X+Y")
 
-# parser.add_argument('--format',help="{w} {h} {x1} {y1} {x2} {x2}")
+parser.add_argument('--format',help="{w} {h} {x1} {y1} {x2} {x2}")
 
 # parser.add_argument('--resize',help="return resized numbers ")
 
@@ -184,7 +185,10 @@ else:
     name = args.name
     print(name)
 
-
+if args.format is None:
+    outputformat="{w}+{h}+{x}+{y}"
+else:
+    outputformat=args.format
 
 
 if(name!=""):
@@ -234,10 +238,10 @@ for sq in square:
     # if(name in locals()):
     print (name)
 
-    print('{width}x{height}+{px}+{py}'.format(
-        px = sq[0][0] if sq[0][0]<=sq[1][0] else sq[1][0],
-        py = sq[0][1] if sq[0][1]<=sq[1][1] else sq[1][1],
-        width = abs(sq[0][0]-sq[1][0]), height=abs(sq[0][1]-sq[1][1])
+    print(outputformat.format(
+        x = sq[0][0] if sq[0][0]<=sq[1][0] else sq[1][0],
+        y = sq[0][1] if sq[0][1]<=sq[1][1] else sq[1][1],
+        w = abs(sq[0][0]-sq[1][0]), h=abs(sq[0][1]-sq[1][1])
         ))
 
 
