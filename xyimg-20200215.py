@@ -10,6 +10,12 @@ import re
 # sys.stderr = os.fdopen(sys.stderr.fileno(), 'w', buffering=1)
 # sys.stdin = os.fdopen(sys.stdin.fileno(), 'r', buffering=1)
 
+
+# filename....?
+# import os
+# print(os.readlink('/proc/self/fd/0'))
+
+
 helptext = '''
 
 -std: stdin
@@ -19,10 +25,10 @@ press U: UNDO
 
 #cat m.jpg | tesseract -l jpn_best stdin stdout
 
-#cat test.png | convert - -crop 50x50+20+20 - |  tesseract -l jpn_best stdin stdout
+#cat test.png | convert - -crop 50x50+20+20 | tesseract -l jpn_best stdin stdout
 
 
-convert ll.pdf[0] png:- |./xyimg-20200215.py - --point > pipe_points
+convert ll.pdf[0] png:- |./xyimg-20200215.py > pipe_points
 
 
 tail -f log.log |xargs -I {} notify-send {}
@@ -35,11 +41,12 @@ tail -f log.log |xargs -I {} sh -c "cat ll.png | convert - -crop {} - |  tessera
 convert -density 150 -quality 100 ll.pdf[0]  png:- |./xyimg-20200215.py - >log.log
 
 
-
 convert -density 150 -quality 100 ll.pdf[0]  png:- |./xyimg-20200215.py -stdin -file=test.jpg >> log.log
 
 pdftoppm -png whys-poignant-guide-to-ruby.pdf -f 1 -l 4 xx
 
+
+cat test.png |./xyimg-20200215.py --format='notify-send "{x}+{y}"' |sh
 
 
 #ファイルを指定して使うときは -file　をつかう。
@@ -54,6 +61,9 @@ ls xx-0*.png |xargs -I {} sh -c '../xyimg-20200215.py -file={}'
     -stdin=3_no_xy みたいにしていできるようにする
 
     出力の一行一行のまえに、　3_no_xy  123x345+50+50 　形式TSVで出力したい時  
+
+
+#ls test.*|xargs -I {} bash -c "./xyimg-20200215.py {}"
 
 
 '''
@@ -215,7 +225,12 @@ while (True):
     if cv2.waitKey(115) & 0xFF == ord("u"):
         print("---- NG -"+name+"=----")
         print("============="+name+"=============")
-        img = cv2.imdecode(array, 1)
+
+        if args.filename is None:
+            img = cv2.imdecode(array, 1)
+        else:
+            img = cv2.imread(args.filename, 1)
+
         cv2.imshow("img", img)
 
 
